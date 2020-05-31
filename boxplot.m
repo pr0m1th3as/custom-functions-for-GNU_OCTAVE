@@ -36,10 +36,10 @@
 ## the bulk of the data.
 ##
 ## @var{data} is a matrix with one column for each data set, or a cell vector
-## with one cell for each data set. Each cell must contain a numerical row or
+## with one cell for each data set.  Each cell must contain a numerical row or
 ## column vector (NaN and NA are ignored) and not a nested vector of cells.
 ##
-## @var{notched} = 1 produces a notched-box plot. Notches represent a robust
+## @var{notched} = 1 produces a notched-box plot.  Notches represent a robust
 ## estimate of the uncertainty about the median.
 ##
 ## @var{notched} = 0 (default) produces a rectangular box plot.
@@ -59,7 +59,7 @@
 ## 'x' and points outside 3 times IQR with '*'.
 ##
 ## @var{orientation} = 0 makes the boxes horizontal, by default @var{orientation} = 1,
-## which plots the boxes vertically. Alternatively, options can be  passed as a string.
+## which plots the boxes vertically.  Alternatively, options can be  passed as a string.
 ##
 ## @var{orientation} = 'vertical'      (default value)
 ##
@@ -73,11 +73,11 @@
 ## @var{group} may be passed as an optional argument only in the second position after
 ## @var{data} containing a numerical vector, which defines separate categories, each
 ## plotted in a different box, for each set of @var{DATA} values that share the same
-## @var{group} value or values. With the formalism (@var{data}, @var{group}), both must
+## @var{group} value or values.  With the formalism (@var{data}, @var{group}), both must
 ## be vectors of the same length.
 ##
 ## @var{options} are additional paired arguments passed with the formalism (Name, Value)
-## that provide extra functionality as listed below. @var{options} can be passed at any
+## that provide extra functionality as listed below.  @var{options} can be passed at any
 ## order after the initial arguments.
 ##
 ## @multitable {Name} {Value} {description} @columnfractions .2 .2 .6
@@ -97,7 +97,7 @@
 ## @item @tab 'off' @tab no tags are plotted (default value)
 ##
 ## @item 'Sample_IDs' @tab 'cell' @tab a cell vector with one cell for each data set containing
-## a nested cell vector with each sample's ID (should be a string). If this option is passed, then
+## a nested cell vector with each sample's ID (should be a string).  If this option is passed, then
 ## all outliers are tagged with their respective sample's id string instead of their vector's index
 ##
 ## @item 'BoxWidth' @tab 'proportional' @tab create boxes with their width proportional to the number
@@ -111,10 +111,10 @@
 ##
 ## @item 'Positions' @tab vector @tab numerical vector that defines the position of each data set.
 ## It must have the same length as the number of groups and can be used to reorder or group them
-## in a desired manner. This vector merely defines the points along the group axis, which by default
+## in a desired manner.  This vector merely defines the points along the group axis, which by default
 ## is [1:number of groups].
 ##
-## @item 'Labels' @tab cell @tab a cell vector of strings containing the names of each group. By
+## @item 'Labels' @tab cell @tab a cell vector of strings containing the names of each group.  By
 ## default each group is labeled numerically according to its order in the data set
 ## @end multitable
 ##
@@ -153,7 +153,7 @@ function [s hs] = boxplot (data, varargin)
     print_usage;
   endif
 
-  % default values
+  ## default values
   maxwhisker = 1.5;
   orientation = 1;
   symbol = ['+', 'o'];
@@ -168,7 +168,7 @@ function [s hs] = boxplot (data, varargin)
   positions = [];
   labels = {};
 
-  % Optional arguments analysis
+  ## Optional arguments analysis
   numarg = nargin - 1;
   option_args = {'Notch'; 'Symbol'; 'Orientation'; 'Whisker'; 'OutlierTags';
                 'Sample_IDs'; 'BoxWidth'; 'Widths'; 'BoxStyle'; 'Positions'; 'Labels'};
@@ -177,7 +177,7 @@ function [s hs] = boxplot (data, varargin)
   while (numarg)
     dummy = varargin{indopt++};
     if (!ischar (dummy) && indopt < 6)
-      %# MatLAB allows passing the second argument as a grouping vector
+      ## MatLAB allows passing the second argument as a grouping vector
       if (length (dummy) > 1)
         if (2 ~= indopt)
           error ('Boxplot.m: grouping vector may only be passed as second arg');
@@ -185,7 +185,7 @@ function [s hs] = boxplot (data, varargin)
         groups = dummy;
         group_exists = 1;
       elseif (length (dummy) == 1)
-        %# old way: positional argument
+        ## old way: positional argument
         switch indopt - group_exists
           case 2
             notched = dummy;
@@ -197,64 +197,91 @@ function [s hs] = boxplot (data, varargin)
             error("No positional argument allowed at position %d", --indopt);
         endswitch
       endif
-      numarg--; continue;
+      numarg--;
+      continue;
     else
       if (3 == indopt - group_exists && length (dummy) <= 2)
-        symbol = dummy;  numarg--; continue;
+        symbol = dummy;
+        numarg--;
+        continue;
       else
-        % checking for additional paired arguments
+        ## checking for additional paired arguments
         tt = find(strcmp(dummy, option_args));
         switch (tt)
           case 1
             notched = varargin{indopt};
-            % chech for string input: 'on' or 'off'
-            if strcmp (notched, "on") notched = 1; endif
-            if strcmp (notched, "off") notched = 0; endif
+            ## chech for string input: 'on' or 'off'
+            if strcmp (notched, "on")
+              notched = 1;
+            endif
+            if strcmp (notched, "off")
+              notched = 0;
+            endif
           case 2
             symbol = varargin{indopt};
           case 3
             orientation = varargin{indopt};
-            % chech for string input: 'vertical' or 'horizontal'
-            if strcmp (notched, "vertical") notched = 1; endif
-            if strcmp (notched, "horizontal") notched = 0; endif
+            ## chech for string input: 'vertical' or 'horizontal'
+            if strcmp (notched, "vertical")
+              notched = 1;
+            endif
+            if strcmp (notched, "horizontal")
+              notched = 0;
+            endif
           case 4
             maxwhisker = varargin{indopt};
           case 5
             outlier_tags = varargin{indopt};
-            % chech for string input: 'on' or 'off'
-            if strcmp (outlier_tags, "on") outlier_tags = 1; endif
-            if strcmp (outlier_tags, "off") outlier_tags = 0; endif
+            ## chech for string input: 'on' or 'off'
+            if strcmp (outlier_tags, "on")
+              outlier_tags = 1;
+            endif
+            if strcmp (outlier_tags, "off")
+              outlier_tags = 0;
+            endif
           case 6
             sample_IDs = varargin{indopt};
             outlier_tags = 1;
           case 7
             box_width = varargin{indopt};
-            % chech for string input: 'fixed' or 'proportional' (default if misspelt)
-            if strcmp (box_width, "fixed") box_width = 'fixed';
-            else box_width = 'proportional'; endif
+            ## chech for string input: 'fixed' or 'proportional' (default if misspelt)
+            if strcmp (box_width, "fixed")
+              box_width = 'fixed';
+            else
+              box_width = 'proportional';
+            endif
           case 8
             widths = varargin{indopt};
           case 9
             box_style = varargin{indopt};
-            % chech for string input: 'outline' or 'filled'
-            if strcmp (box_style, "outline") box_style = 0; endif
-            if strcmp (box_style, "filled") box_style = 1; endif
+            ## chech for string input: 'outline' or 'filled'
+            if strcmp (box_style, "outline")
+              box_style = 0;
+            endif
+            if strcmp (box_style, "filled")
+              box_style = 1;
+            endif
           case 10
             positions = varargin{indopt};
           case 11
             labels = varargin{indopt};
           otherwise
-            %# take two args and append them to plot_opts
+            ## take two args and append them to plot_opts
             plot_opts(1, end+1:end+2) = {dummy,  varargin{indopt}};
         endswitch
       endif
-      numarg -= 2; indopt++; 
+      numarg -= 2;
+      indopt++; 
     endif
   endwhile
 
-  if (1 == length (symbol)) symbol(2) = symbol(1); endif
+  if (1 == length (symbol))
+    symbol(2) = symbol(1);
+  endif
 
-  if (1 == notched) notched = 0.25; endif
+  if (1 == notched)
+    notched = 0.25;
+  endif
   a = 1-notched;
 
   ## figure out how many data sets we have
@@ -265,34 +292,36 @@ function [s hs] = boxplot (data, varargin)
         lc(ind_c) = length (data{ind_c});
       endfor
 	  else
-      if (isvector (data)) data = data(:); endif
+      if (isvector (data))
+        data = data(:);
+      endif
       nc = columns (data);
       lc = ones (1,nc) * rows (data);
     endif
     groups = (1:nc);
-    % check if sample_IDs exists that it has same size with data
-    if (~isempty (sample_IDs) && length (sample_IDs) == 1)
+    ## check if sample_IDs exists that it has same size with data
+    if (!isempty (sample_IDs) && length (sample_IDs) == 1)
       for ind_c = (1:nc)
-        if (lc(ind_c) ~= length (sample_IDs))
+        if (lc(ind_c) != length (sample_IDs))
           error ('Boxplot.m: Sample_IDs must match the data');
         endif
       endfor
-    elseif (~isempty (sample_IDs) && length (sample_IDs) == nc)
+    elseif (!isempty (sample_IDs) && length (sample_IDs) == nc)
       for ind_c = (1:nc)
-        if (lc(ind_c) ~= length (sample_IDs{ind_c}))
+        if (lc(ind_c) != length (sample_IDs{ind_c}))
           error ('Boxplot.m: Sample_IDs must match the data');
         endif
       endfor
-    elseif (~isempty (sample_IDs) && length (sample_IDs) ~= nc)
+    elseif (!isempty (sample_IDs) && length (sample_IDs) != nc)
       error ('Boxplot.m: Sample_IDs must match the data');
     endif
   else
-    if (~isvector (data))
+    if (!isvector (data))
       error ('Boxplot.m: with the formalism (data, group), both must be vectors');
     end
-    % check if sample IDs exist that they have same size with data
-    if (~isempty (sample_IDs))
-      if (length (sample_IDs) ~= 1 || length (sample_IDs{1}) ~= length (data))
+    ## check if sample IDs exist that they have same size with data
+    if (!isempty (sample_IDs))
+      if (length (sample_IDs) != 1 || length (sample_IDs{1}) != length (data))
         error ('Boxplot.m: Sample_IDs must match the data');
       endif
       nc = unique (groups);
@@ -301,14 +330,19 @@ function [s hs] = boxplot (data, varargin)
       for ind_c = (1:length (nc))
         dummy_data(ind_c) = data(groups == nc(ind_c));
         dummy_sIDs(ind_c) = {sample_IDs{1}(groups == nc(ind_c))};
-      end
-      data = dummy_data; groups = nc(:).'; nc = length (nc); sample_IDs = dummy_sIDs;
+      endfor
+      data = dummy_data;
+      groups = nc(:).';
+      nc = length (nc);
+      sample_IDs = dummy_sIDs;
     else
-      nc = unique (groups); dummy = cell (1, length (nc));
+      nc = unique (groups);
+      dummy = cell (1, length (nc));
       for indopt = (1:length (nc))
         dummy(indopt) = data(groups == nc(indopt));
-      end
-      data = dummy; groups = nc(:).'; nc = length (nc);
+      endfor
+      data = dummy; groups = nc(:).';
+      nc = length (nc);
     endif
   endif
 
@@ -319,17 +353,19 @@ function [s hs] = boxplot (data, varargin)
   ##    6,7    lower and upper confidence intervals for median
   s = zeros (7, nc);
   box = zeros (1, nc);
-  % create labels according to number of datasets as ordered in parsed data
-  % in case they are not provided by the user as optional argument
-  if (isempty(labels))
+  ## create labels according to number of datasets as ordered in parsed data
+  ## in case they are not provided by the user as optional argument
+  if (isempty (labels))
     for i=1:nc
-      column_label = num2str(groups(i));
+      column_label = num2str (groups(i));
       labels(i) = {column_label};
     endfor
   endif
-  % arrange the boxes into desired positions (if requested, otherwise leave default 1:nc)
-  if (~isempty(positions)) groups = positions; endif	
-  % initialize whisker matrices to correct size and all necessary outlier variables
+  ## arrange the boxes into desired positions (if requested, otherwise leave default 1:nc)
+  if (!isempty (positions))
+    groups = positions;
+  endif	
+  ## initialize whisker matrices to correct size and all necessary outlier variables
   whisker_x = ones (2,1)*[groups, groups];
   whisker_y = zeros (2, 2*nc);
   outliers_x = [];
@@ -345,7 +381,7 @@ function [s hs] = boxplot (data, varargin)
     ## Get the next data set from the array or cell array
     if (iscell (data))
       col = data{indi}(:);
-      if (~isempty (sample_IDs))
+      if (!isempty (sample_IDs))
         sIDs = sample_IDs{indi};
       else
         sIDs = num2cell([1:length(col)]);
@@ -354,13 +390,13 @@ function [s hs] = boxplot (data, varargin)
       col = data(:, indi);
       sIDs = num2cell([1:length(col)]);
     endif
-    % Skip missing data (NaN, NA) and remove respective sample IDs
-    % do this only on nonempty data
+    ## Skip missing data (NaN, NA) and remove respective sample IDs
+    ## do this only on nonempty data
     if length(col) > 0
-      remove_samples = find(col(isnan (col) | isna (col)));
-      if length(remove_samples) > 0
-        col(remove_samples)=[];
-        sIDs(remove_samples)=[];
+      remove_samples = find (col(isnan (col) | isna (col)));
+      if length (remove_samples) > 0
+        col(remove_samples) = [];
+        sIDs(remove_samples) = [];
       endif
     endif
     ## Remember data length
@@ -380,7 +416,7 @@ function [s hs] = boxplot (data, varargin)
       ## outliers beyond 1 and 2 inter-quartile ranges
       outliers = col((col < s(2, indi)-IQR & col >= s(2, indi)-2*IQR) | (col > s(4, indi)+IQR & col <= s(4, indi)+2*IQR));
       outliers2 = col(col < s(2, indi)-2*IQR | col > s(4, indi)+2*IQR);
-      % get outliers indices from this dataset
+      ## get outliers indices from this dataset
       if length (outliers) > 0
         for out_i = 1:length (outliers)
           outliers_idx = [outliers_idx; find(col == outliers(out_i))];
@@ -403,7 +439,7 @@ function [s hs] = boxplot (data, varargin)
       ## single point data sets are plotted as outliers.
       outliers_x = [outliers_x; groups(indi)];
       outliers_y = [outliers_y; col];
-      % append the single point's index to keep the outliers' vector aligned
+      ## append the single point's index to keep the outliers' vector aligned
       outliers_idx = [outliers_idx; 1];
       outliers_IDs = {outliers_IDs{}, sIDs{}};
     else
@@ -415,13 +451,13 @@ function [s hs] = boxplot (data, varargin)
   ## Note which boxes don't have enough stats
   chop = find (box <= 1);
 
-  % replicate widths (if scalar or shorter vector) to match the number of boxes
+  ## replicate widths (if scalar or shorter vector) to match the number of boxes
   widths = widths(repmat(1:length(widths),1,nc));
-  % truncate just in case :)
+  ## truncate just in case :)
   widths([nc+1:end]) = [];
-  % Draw a box around the quartiles, with box width being fixed or proportional
-  % to the number of items in the box.
-  if (strcmp(box_width, 'proportional'))
+  ## Draw a box around the quartiles, with box width being fixed or proportional
+  ## to the number of items in the box.
+  if (strcmp (box_width, 'proportional'))
     box = box .* (widths ./ max(box));
   else
     box = box .* (widths ./ box);
@@ -448,7 +484,7 @@ function [s hs] = boxplot (data, varargin)
   cap_x(2, :) += 0.05;
   cap_y = whisker_y([1, 1], :);
 
-  % calculate coordinates for outlier tags
+  ## calculate coordinates for outlier tags
   outliers_tags_x = outliers_x + 0.08;
   outliers_tags_y = outliers_y;
   outliers2_tags_x = outliers2_x + 0.08;
@@ -456,18 +492,20 @@ function [s hs] = boxplot (data, varargin)
 
   ## Do the plot
   if (orientation)
-    % define outlier_tags' vertical alignment
+    ## define outlier_tags' vertical alignment
     outlier_tags_alignment = {"horizontalalignment", "left"};
     if (isempty (plot_opts))
-      if (box_style)	f = fill(quartile_x, quartile_y,"y"); hold on; endif
-        h = plot (quartile_x, quartile_y, "b;;",
-            whisker_x, whisker_y, "b;;",
-            cap_x, cap_y, "b;;",
-            median_x, median_y, "r;;",
-            outliers_x, outliers_y, [symbol(1), "r;;"],
-            outliers2_x, outliers2_y, [symbol(2), "r;;"]);
-            %"xtick", [], "xticklabel", {});
-      % print outlier tags
+      if (box_style)
+        f = fill(quartile_x, quartile_y,"y");
+        hold on;
+      endif
+      h = plot (quartile_x, quartile_y, "b;;",
+          whisker_x, whisker_y, "b;;",
+          cap_x, cap_y, "b;;",
+          median_x, median_y, "r;;",
+          outliers_x, outliers_y, [symbol(1), "r;;"],
+          outliers2_x, outliers2_y, [symbol(2), "r;;"]);
+      ## print outlier tags
       if (outlier_tags == 1 && outliers_x > 0)
         t1 = plot_tags (outliers_tags_x, outliers_tags_y, outliers_idx,
              outliers_IDs, sample_IDs, outlier_tags_alignment);
@@ -477,15 +515,17 @@ function [s hs] = boxplot (data, varargin)
              outliers2_IDs, sample_IDs, outlier_tags_alignment);
       endif
     else
-      if (box_style)	f = fill(quartile_x, quartile_y,"y"); hold on; endif
-        h = plot (quartile_x, quartile_y, "b;;",
-            whisker_x, whisker_y, "b;;",
-            cap_x, cap_y, "b;;",
-            median_x, median_y, "r;;",
-            outliers_x, outliers_y, [symbol(1), "r;;"],
-            outliers2_x, outliers2_y, [symbol(2), "r;;"], plot_opts{:});
-            %"xtick", [], "xticklabel", {}, plot_opts{:});
-      % print outlier tags
+      if (box_style)
+        f = fill(quartile_x, quartile_y,"y");
+        hold on;
+      endif
+      h = plot (quartile_x, quartile_y, "b;;",
+          whisker_x, whisker_y, "b;;",
+          cap_x, cap_y, "b;;",
+          median_x, median_y, "r;;",
+          outliers_x, outliers_y, [symbol(1), "r;;"],
+          outliers2_x, outliers2_y, [symbol(2), "r;;"], plot_opts{:});
+      ## print outlier tags
       if (outlier_tags == 1 && outliers_x > 0)
         t1 = plot_tags (outliers_tags_x, outliers_tags_y, outliers_idx,
              outliers_IDs, sample_IDs, outlier_tags_alignment);
@@ -496,18 +536,20 @@ function [s hs] = boxplot (data, varargin)
       endif
     endif
   else
-    % define outlier_tags' horizontal alignment
+    ## define outlier_tags' horizontal alignment
     outlier_tags_alignment = {"horizontalalignment", "left", "rotation", 90};
     if (isempty (plot_opts))
-      if (box_style)	f = fill(quartile_y, quartile_x,"y"); hold on; endif
-        h = plot (quartile_y, quartile_x, "b;;",
-            whisker_y, whisker_x, "b;;",
-            cap_y, cap_x, "b;;",
-            median_y, median_x, "r;;",
-            outliers_y, outliers_x, [symbol(1), "r;;"],
-            outliers2_y, outliers2_x, [symbol(2), "r;;"]);
-            %"ytick", [], "yticklabel", {});
-      % print outlier tags
+      if (box_style)
+        f = fill(quartile_y, quartile_x,"y");
+        hold on;
+      endif
+      h = plot (quartile_y, quartile_x, "b;;",
+          whisker_y, whisker_x, "b;;",
+          cap_y, cap_x, "b;;",
+          median_y, median_x, "r;;",
+          outliers_y, outliers_x, [symbol(1), "r;;"],
+          outliers2_y, outliers2_x, [symbol(2), "r;;"]);
+      ## print outlier tags
       if (outlier_tags == 1 && outliers_x > 0)
         t1 = plot_tags (outliers_tags_y, outliers_tags_x, outliers_idx,
              outliers_IDs, sample_IDs, outlier_tags_alignment);
@@ -517,15 +559,17 @@ function [s hs] = boxplot (data, varargin)
              outliers2_IDs, sample_IDs, outlier_tags_alignment);
       endif
     else
-      if (box_style)	f = fill(quartile_y, quartile_x,"y"); hold on; endif
-        h = plot (quartile_y, quartile_x, "b;;",
-            whisker_y, whisker_x, "b;;",
-            cap_y, cap_x, "b;;",
-            median_y, median_x, "r;;",
-            outliers_y, outliers_x, [symbol(1), "r;;"],
-            outliers2_y, outliers2_x, [symbol(2), "r;;"], plot_opts{:});
-            %"ytick", [], "yticklabel", {}, plot_opts{:});
-      % print outlier tags
+      if (box_style)
+        f = fill(quartile_y, quartile_x,"y");
+        hold on;
+      endif
+      h = plot (quartile_y, quartile_x, "b;;",
+          whisker_y, whisker_x, "b;;",
+          cap_y, cap_x, "b;;",
+          median_y, median_x, "r;;",
+          outliers_y, outliers_x, [symbol(1), "r;;"],
+          outliers2_y, outliers2_x, [symbol(2), "r;;"], plot_opts{:});
+      ## print outlier tags
       if (outlier_tags == 1 && outliers_x > 0)
         t1 = plot_tags (outliers_tags_y, outliers_tags_x, outliers_idx,
              outliers_IDs, sample_IDs, outlier_tags_alignment);
@@ -537,7 +581,7 @@ function [s hs] = boxplot (data, varargin)
     endif
   endif
 
-  % Distribute handles for box outlines and box fill (if any)
+  ## Distribute handles for box outlines and box fill (if any)
   nq = 1:size(quartile_x,2);
   hs.box = h(nq);
   if (box_style)
@@ -546,14 +590,14 @@ function [s hs] = boxplot (data, varargin)
   else
     hs.box_fill = [];
   endif
-  % Distribute handles for whiskers (including caps) and median lines
+  ## Distribute handles for whiskers (including caps) and median lines
   nw = nq(end) + [1:2*size(whisker_x,2)];
   hs.whisker = h(nw);
   nm = nw(end)+ [1:size(median_x,2)];
   hs.median = h(nm);
-  % Distribute handles for outliers (if any) and their respective tags (if applicable)
+  ## Distribute handles for outliers (if any) and their respective tags (if applicable)
   no = nm;
-  if ~isempty (outliers_y)
+  if !isempty (outliers_y)
     no = nm(end) + [1:size(outliers_y,2)];
     hs.outliers = h(no);
     if (outlier_tags == 1)
@@ -566,8 +610,8 @@ function [s hs] = boxplot (data, varargin)
     hs.outliers = [];
     hs.out_tags = [];
   endif
-  % Distribute handles for extreme outliers (if any) and their respective tags (if applicable)
-  if ~isempty (outliers2_y)
+  ## Distribute handles for extreme outliers (if any) and their respective tags (if applicable)
+  if !isempty (outliers2_y)
     no2 = no(end) + [1:size(outliers2_y,2)];
     hs.outliers2 = h(no2);
     if (outlier_tags == 1)
@@ -581,9 +625,12 @@ function [s hs] = boxplot (data, varargin)
     hs.out_tags2 = [];
   end
 
-  % Redraw the median lines to avoid colour overlapping in case of 'filled' BoxStyle
-  if (box_style)	set(hs.median,"color","r"); endif
-  % Print labels according to orientation and return handle
+  ## Redraw the median lines to avoid colour overlapping in case of 'filled' BoxStyle
+  if (box_style)
+    set(hs.median,"color","r");
+  endif
+  
+  ## Print labels according to orientation and return handle
   if (orientation)
     set(gca(), "xtick", groups, "xticklabel", labels);
     hs.labels = get (gcf, "currentaxes");
@@ -596,13 +643,19 @@ endfunction
 
 function htags = plot_tags (out_tags_x, out_tags_y, out_idx, out_IDs, sample_IDs, opt)
   for i=1:length (out_tags_x)
-    if (~isempty (sample_IDs))
+    if (!isempty (sample_IDs))
       htags(i) = text(out_tags_x(i), out_tags_y(i), out_IDs{i}, opt{});
     else
       htags(i) = text(out_tags_x(i), out_tags_y(i), num2str(out_idx(i)), opt{});
     endif
   endfor
 endfunction
+
+%!demo
+%! axis ([0,3]);
+%! boxplot ({randn(10,1)*5+140, randn(13,1)*8+135});
+%! set(gca (), "xtick", [1 2], "xticklabel", {"girls", "boys"})
+%! title ("Grade 3 heights");
 
 %!demo
 %! data = [randn(10,1)*5+140; randn(25,1)*8+135; randn(20,1)*6+165];

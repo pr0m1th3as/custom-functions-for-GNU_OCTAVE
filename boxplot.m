@@ -244,7 +244,7 @@ function [s hs] = boxplot (data, varargin)
             outlier_tags = 1;
           case 7
             box_width = varargin{indopt};
-            ## chech for string input: 'fixed' or 'proportional' (default if misspelt)
+            ## check for string input: 'fixed' or 'proportional' (default if mis-spelled)
             if strcmp (box_width, "fixed")
               box_width = 'fixed';
             else

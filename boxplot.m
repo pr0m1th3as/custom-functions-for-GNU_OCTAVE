@@ -176,10 +176,10 @@ function [s hs] = boxplot (data, varargin)
   group_exists = 0;
   while (numarg)
     dummy = varargin{indopt++};
-    if (!ischar (dummy) && indopt < 6)
+    if (! ischar (dummy) && indopt < 6)
       ## MatLAB allows passing the second argument as a grouping vector
       if (length (dummy) > 1)
-        if (2 ~= indopt)
+        if (2 != indopt)
           error ('Boxplot.m: grouping vector may only be passed as second arg');
         endif
         groups = dummy;
@@ -300,27 +300,27 @@ function [s hs] = boxplot (data, varargin)
     endif
     groups = (1:nc);
     ## check if sample_IDs exists that it has same size with data
-    if (!isempty (sample_IDs) && length (sample_IDs) == 1)
+    if (! isempty (sample_IDs) && length (sample_IDs) == 1)
       for ind_c = (1:nc)
         if (lc(ind_c) != length (sample_IDs))
           error ('Boxplot.m: Sample_IDs must match the data');
         endif
       endfor
-    elseif (!isempty (sample_IDs) && length (sample_IDs) == nc)
+    elseif (! isempty (sample_IDs) && length (sample_IDs) == nc)
       for ind_c = (1:nc)
         if (lc(ind_c) != length (sample_IDs{ind_c}))
           error ('Boxplot.m: Sample_IDs must match the data');
         endif
       endfor
-    elseif (!isempty (sample_IDs) && length (sample_IDs) != nc)
+    elseif (! isempty (sample_IDs) && length (sample_IDs) != nc)
       error ('Boxplot.m: Sample_IDs must match the data');
     endif
   else
-    if (!isvector (data))
+    if (! isvector (data))
       error ('Boxplot.m: with the formalism (data, group), both must be vectors');
     end
     ## check if sample IDs exist that they have same size with data
-    if (!isempty (sample_IDs))
+    if (! isempty (sample_IDs))
       if (length (sample_IDs) != 1 || length (sample_IDs{1}) != length (data))
         error ('Boxplot.m: Sample_IDs must match the data');
       endif
@@ -362,7 +362,7 @@ function [s hs] = boxplot (data, varargin)
     endfor
   endif
   ## arrange the boxes into desired positions (if requested, otherwise leave default 1:nc)
-  if (!isempty (positions))
+  if (! isempty (positions))
     groups = positions;
   endif	
   ## initialize whisker matrices to correct size and all necessary outlier variables
@@ -597,7 +597,7 @@ function [s hs] = boxplot (data, varargin)
   hs.median = h(nm);
   ## Distribute handles for outliers (if any) and their respective tags (if applicable)
   no = nm;
-  if !isempty (outliers_y)
+  if (! isempty (outliers_y))
     no = nm(end) + [1:size(outliers_y,2)];
     hs.outliers = h(no);
     if (outlier_tags == 1)
@@ -611,7 +611,7 @@ function [s hs] = boxplot (data, varargin)
     hs.out_tags = [];
   endif
   ## Distribute handles for extreme outliers (if any) and their respective tags (if applicable)
-  if !isempty (outliers2_y)
+  if (! isempty (outliers2_y))
     no2 = no(end) + [1:size(outliers2_y,2)];
     hs.outliers2 = h(no2);
     if (outlier_tags == 1)
@@ -627,15 +627,15 @@ function [s hs] = boxplot (data, varargin)
 
   ## Redraw the median lines to avoid colour overlapping in case of 'filled' BoxStyle
   if (box_style)
-    set(hs.median,"color","r");
+    set (hs.median,"color","r");
   endif
   
   ## Print labels according to orientation and return handle
   if (orientation)
-    set(gca(), "xtick", groups, "xticklabel", labels);
+    set (gca(), "xtick", groups, "xticklabel", labels);
     hs.labels = get (gcf, "currentaxes");
   else
-    set(gca(), "ytick", groups, "yticklabel", labels);
+    set (gca(), "ytick", groups, "yticklabel", labels);
     hs.labels = get (gcf, "currentaxes");
   endif
 
@@ -643,7 +643,7 @@ endfunction
 
 function htags = plot_tags (out_tags_x, out_tags_y, out_idx, out_IDs, sample_IDs, opt)
   for i=1:length (out_tags_x)
-    if (!isempty (sample_IDs))
+    if (! isempty (sample_IDs))
       htags(i) = text(out_tags_x(i), out_tags_y(i), out_IDs{i}, opt{});
     else
       htags(i) = text(out_tags_x(i), out_tags_y(i), num2str(out_idx(i)), opt{});
